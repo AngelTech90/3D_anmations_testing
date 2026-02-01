@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Octagon with VPS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2e 100%);
+            perspective: 1200px;
+        }
+
+        .scene {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            transform-style: preserve-3d;
+            transition: transform 1.2s ease-in-out;
+        }
+
+        .scene:hover {
+            transform: rotateX(90deg);
+        }
+
+        .scene:hover .octagon-container {
+            animation-play-state: paused;
+        }
+
+        .scene:hover .vps-cube {
+            animation-play-state: paused;
+        }
+
+        /* VPS Cube in the center */
+        .vps-cube {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 50%;
+            margin-left: -75px;
+            margin-top: -75px;
+            transform-style: preserve-3d;
+            animation: rotateVPS 8s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(100, 150, 255, 0.15);
+            border: 2px solid rgba(150, 200, 255, 0.6);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: rgba(200, 220, 255, 0.9);
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.8);
+        }
+
+        .cube-face img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(75px); }
+        .cube-face:nth-child(2) { transform: rotateY(90deg) translateZ(75px); }
+        .cube-face:nth-child(3) { transform: rotateY(180deg) translateZ(75px); }
+        .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(75px); }
+        .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(75px); }
+        .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(75px); }
+
+        /* Octagon container */
+        .octagon-container {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            margin-left: -100px;
+            margin-top: -100px;
+            transform-style: preserve-3d;
+            animation: rotateOctagon 10s infinite linear reverse;
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: transparent;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backface-visibility: visible;
+            transition: transform 1.2s ease-in-out;
+        }
+
+        .face img {
+            width: 120px;
+            height: 119px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .face img:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 30px rgba(100, 150, 255, 0.8);
+        }
+
+        /* 4 vertical faces of the octagon */
+        .face:nth-child(1) {
+            transform: rotateY(0deg) translateZ(300px);
+        }
+
+        .scene:hover .face:nth-child(1) {
+            transform: rotateY(0deg) translateZ(300px) rotateX(-90deg);
+        }
+
+        .face:nth-child(2) {
+            transform: rotateY(90deg) translateZ(300px);
+        }
+
+        .scene:hover .face:nth-child(2) {
+            transform: rotateY(90deg) translateZ(300px) rotateX(-90deg);
+        }
+
+        .face:nth-child(3) {
+            transform: rotateY(180deg) translateZ(300px);
+        }
+
+        .scene:hover .face:nth-child(3) {
+            transform: rotateY(180deg) translateZ(300px) rotateX(-90deg);
+        }
+
+        .face:nth-child(4) {
+            transform: rotateY(270deg) translateZ(300px);
+        }
+
+        .scene:hover .face:nth-child(4) {
+            transform: rotateY(270deg) translateZ(300px) rotateX(-90deg);
+        }
+
+        /* 4 angled faces at top */
+        .face:nth-child(5) {
+            transform: rotateY(45deg) rotateZ(45deg) translateZ(200px) translateY(-100px);
+        }
+
+        .scene:hover .face:nth-child(5) {
+            transform: rotateY(45deg) rotateZ(0deg) translateZ(200px) translateY(-100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(6) {
+            transform: rotateY(135deg) rotateZ(45deg) translateZ(200px) translateY(-100px);
+        }
+
+        .scene:hover .face:nth-child(6) {
+            transform: rotateY(135deg) rotateZ(0deg) translateZ(200px) translateY(-100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(7) {
+            transform: rotateY(225deg) rotateZ(45deg) translateZ(200px) translateY(-100px);
+        }
+
+        .scene:hover .face:nth-child(7) {
+            transform: rotateY(225deg) rotateZ(0deg) translateZ(200px) translateY(-100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(8) {
+            transform: rotateY(315deg) rotateZ(45deg) translateZ(200px) translateY(-100px);
+        }
+
+        .scene:hover .face:nth-child(8) {
+            transform: rotateY(315deg) rotateZ(0deg) translateZ(200px) translateY(-100px) rotateX(-90deg);
+        }
+
+        /* 4 angled faces at bottom */
+        .face:nth-child(9) {
+            transform: rotateY(45deg) rotateZ(-45deg) translateZ(200px) translateY(100px);
+        }
+
+        .scene:hover .face:nth-child(9) {
+            transform: rotateY(45deg) rotateZ(0deg) translateZ(200px) translateY(100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(10) {
+            transform: rotateY(135deg) rotateZ(-45deg) translateZ(200px) translateY(100px);
+        }
+
+        .scene:hover .face:nth-child(10) {
+            transform: rotateY(135deg) rotateZ(0deg) translateZ(200px) translateY(100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(11) {
+            transform: rotateY(225deg) rotateZ(-45deg) translateZ(200px) translateY(100px);
+        }
+
+        .scene:hover .face:nth-child(11) {
+            transform: rotateY(225deg) rotateZ(0deg) translateZ(200px) translateY(100px) rotateX(-90deg);
+        }
+
+        .face:nth-child(12) {
+            transform: rotateY(315deg) rotateZ(-45deg) translateZ(200px) translateY(100px);
+        }
+
+        .scene:hover .face:nth-child(12) {
+            transform: rotateY(315deg) rotateZ(0deg) translateZ(200px) translateY(100px) rotateX(-90deg);
+        }
+
+        /* Top square face - hidden */
+        .face:nth-child(13) {
+            transform: rotateX(90deg) translateZ(141px);
+            display: none;
+        }
+
+        /* Bottom square face - hidden */
+        .face:nth-child(14) {
+            transform: rotateX(-90deg) translateZ(141px);
+            display: none;
+        }
+
+        @keyframes rotateOctagon {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        @keyframes rotateVPS {
+            from {
+                transform: rotateY(360deg) rotateX(-20deg);
+            }
+            to {
+                transform: rotateY(0deg) rotateX(-20deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <!-- VPS Cube in center -->
+        <div class="vps-cube">
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+            <div class="cube-face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Tux"></div>
+        </div>
+
+        <!-- Octagon with Linux distros -->
+        <div class="octagon-container">
+            <div class="face"><img src="https://www.nginx.com/wp-content/uploads/2020/06/NGINX-Logo-White-Endorsement-RGB.svg" alt="Nginx"></div>
+            <div class="face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rockylinux/rockylinux-original.svg" alt="Rocky Linux"></div>
+            <div class="face"><img src="https://almalinux.org/images/icon.svg" alt="AlmaLinux"></div>
+            <div class="face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/alpinelinux/alpinelinux-original.svg" alt="Alpine Linux"></div>
+            <div class="face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/centos/centos-original.svg" alt="CentOS"></div>
+            <div class="face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opensuse/opensuse-original.svg" alt="openSUSE"></div>
+            <div class="face"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/archlinux/archlinux-original.svg" alt="Arch Linux"></div>
+            <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/icons_folder-7/leaf.svg" alt="Linux Mint"></div>
+            <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/icons_folder-7/alpinelinux-icon.svg" alt="AlpineLinux"></div>
+            <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/icons_folder-7/debian-original.svg" alt="Debian"></div>
+            <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/image(11).png?updatedAt=1730251688162" alt="UbuntuServer"></div>
+            <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/icons_folder-7/nginx-original.svg" alt="Nginix"></div>
+	    <div class="face"><img src="https://ik.imagekit.io/qr7w3vvc04/icons_folder-7/redhat-original.svg?updatedAt=1768937353761" alt="Redhat"></div>
+            <div class="face"></div>
+        </div>
+    </div>
+</body>
+</html>
